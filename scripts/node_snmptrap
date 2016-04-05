@@ -1,0 +1,18 @@
+#/bin/sh
+hostname=$1
+trap_name=$3
+comment=$4
+
+sttaus=0
+case "$2" in
+   "OK") status=0
+   ;;
+   "WARNING") status=2
+   ;;
+   "CRITICAL") status=1
+   ;;
+   "UNKNOWN") status=8
+   ;;
+esac
+
+/usr/bin/snmptrap -v 2c -c public 10.211.55.2 "" NAGIOS-NOTIFY-MIB::nSvcEvent nSvcHostname s "$hostname" nSvcDesc s "$trap_name" nSvcStateID i $status nSvcOutput s "test message";
