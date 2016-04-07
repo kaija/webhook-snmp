@@ -1,18 +1,24 @@
 #/bin/sh
-hostname=$1
-trap_name=$3
-comment=$4
+snmp_server=$1
+hostname=$2
+trap_name=$4
+comment=$5
 
-sttaus=0
-case "$2" in
+status=0
+case "$3" in
    "OK") status=0
    ;;
-   "WARNING") status=2
+   "WARNING") status=1
    ;;
-   "CRITICAL") status=1
+   "CRITICAL") status=2
    ;;
    "UNKNOWN") status=8
    ;;
 esac
 
-/usr/bin/snmptrap -v 2c -c public 10.211.55.2 "" NAGIOS-NOTIFY-MIB::nSvcEvent nSvcHostname s "$hostname" nSvcDesc s "$trap_name" nSvcStateID i $status nSvcOutput s "test message";
+echo "trap: $trap_name"
+echo "hostname: $hostname"
+echo "state: $3"
+echo "message: $comment"
+
+/usr/bin/snmptrap -v 2c -c public "$snmp_server" "" NAGIOS-NOTIFY-MIB::nSvcEvent nSvcHostname s "$hostname" nSvcDesc s "$trap_name" nSvcStateID i $status nSvcOutput s "'$comment'";
