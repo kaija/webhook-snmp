@@ -5,8 +5,8 @@ all: image
 image:
 	docker build -t kaija/webhook-snmp .
 
-run:
-	docker run -p 161:161/udp -p 80:80/tcp kaija/webhook-snmp
+webhook:
+	docker run -p 9999:9999/tcp --name webhook kaija/webhook-snmp
 
-debug:
-	docker run -it -p 161:161/udp -p 80:80/tcp -e SNMP_SERVER=10.211.55.43 kaija/webhook-snmp /bin/bash
+debug_webhook:
+	docker run -it -p 9999:9999/tcp -e SNMP_SERVER=10.211.55.43 --name webhook kaija/webhook-snmp /bin/bash
